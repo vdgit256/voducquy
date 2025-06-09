@@ -5,19 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Program Manager | Project Manager | Delivery Manager - Vo Duc Quy</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js library for Radar Chart is removed as per user request -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <!-- html2pdf library for PDF generation (removed as per user request) -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script> -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Cool Neutral Tones -->
-    <!-- Application Structure Plan: A single-page application with a fixed top navigation bar for easy access to different sections (Summary, Skills, Experience, Certifications, Projects, AI Career Explorer). This structure provides a clear, intuitive user flow, allowing recruiters to quickly jump to the information they need. An interactive timeline for experience and clickable cards for projects make the content digestible and engaging, avoiding a long, static wall of text. The design prioritizes scannability and quick insights. -->
+    <!-- Application Structure Plan: A single-page application with a fixed top navigation bar for easy access to different sections (Summary, Skills, Experience, Certifications, Projects). This structure provides a clear, intuitive user flow, allowing recruiters to quickly jump to the information they need. An interactive timeline for experience and clickable cards for projects make the content digestible and engaging, avoiding a long, static wall of text. The design prioritizes scannability and quick insights. -->
     <!-- Visualization & Content Choices: 
         - Summary (Inform): A clear, prominent text block to state the candidate's value proposition immediately.
-        - Skills (Compare/Inform): A Radar Chart from Chart.js visualizes key management competencies for high impact and quick comparison. Technical skills are presented as styled tags (HTML/Tailwind) for a modern look and easy scanning. "Learn More" links for each management skill provide detailed justifications in a modal. This dual approach caters to both high-level and detailed review.
+        - Skills (Compare/Inform): Management skills are presented as a collapsible list for details, and technical skills as styled tags.
         - Experience (Organize/Inform): An interactive vertical timeline (HTML/CSS/JS) allows users to expand and collapse job details, managing information density and focusing user attention.
         - Certifications (Inform): Clean, grouped lists (HTML/Tailwind) for maximum readability. "Learn More" link added for Associate's Degree with detailed achievements in a modal.
         - Projects (Organize/Inform): A grid of interactive cards (HTML/CSS/JS) presents projects cleanly. A click reveals more details in a modal, keeping the main layout uncluttered.
-        - AI Career Path Explorer (Inform/Suggest): Leverages Gemini API to provide dynamic career path suggestions based on the CV content, offering a personalized AI-powered feature.
+        - PDF Download: Removed as per user request.
+        - Word Download: Removed as per user request.
         - This approach ensures the SPA is engaging, easy to navigate, and effectively communicates the depth and breadth of the candidate's expertise. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -68,6 +72,15 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Custom CSS for list item disc color */
+        ul li::marker {
+            color: #0ea5e9; /* Tailwind's sky-500 blue */
+        }
+        /* Ensure list style is applied to lists within the modal details */
+        #modal-details ul {
+            list-style-type: disc;
+            list-style-position: inside;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -82,11 +95,10 @@
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#summary" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Summary</a>
-                        <a href="#skills" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Skills</a>
                         <a href="#experience" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Experience</a>
+                        <a href="#skills" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Skills</a>
                         <a href="#certifications" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Certifications</a>
                         <a href="#projects" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Projects</a>
-                        <a href="#career-explorer" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">AI Career Explorer</a>
                     </div>
                 </div>
                 <div class="md:hidden">
@@ -101,11 +113,10 @@
         <div id="mobile-menu" class="md:hidden hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#summary" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700">Summary</a>
-                <a href="#skills" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700">Skills</a>
                 <a href="#experience" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700">Experience</a>
+                <a href="#skills" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700">Skills</a>
                 <a href="#certifications" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700">Certifications</a>
                 <a href="#projects" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700">Projects</a>
-                <a href="#career-explorer" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-700">AI Career Explorer</a>
             </div>
         </div>
     </nav>
@@ -136,52 +147,266 @@
             </p>
         </section>
 
+        <!-- Work Experience Section -->
+        <section id="experience" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-slate-800 border-b-2 border-sky-500 pb-2 mb-8">Work Experience</h2>
+            <p class="text-slate-600 mb-8">My career progression is outlined below in an interactive timeline. Click on any role to expand and view detailed responsibilities and key achievements.</p>
+            <div class="relative border-l-2 border-slate-200">
+                
+                <!-- Timeline Item -->
+                <div class="mb-10 ml-6 timeline-item">
+                    <span class="absolute flex items-center justify-center w-3 h-3 bg-sky-500 rounded-full -left-1.5 ring-8 ring-white"></span>
+                    <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm cursor-pointer" onclick="toggleDetails(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-slate-900">Program Manager</h3>
+                            <span class="text-sm font-medium text-slate-500">06/2022 – Present</span>
+                        </div>
+                        <p class="text-md font-normal text-slate-600">Accenture Vietnam (Acquired Linkbynet)</p>
+                        <div class="timeline-item-content">
+                            <ul class="mt-4 list-disc list-inside text-slate-700 space-y-2">
+                                <li>Orchestrated large-scale digital transformation initiatives for clients across Retailing, Luxury Fashion, and Technology sectors.</li>
+                                <li>Led a dedicated team of 30+ cross-functional professionals, managing and tracking all projects within the account, ensuring 100% adherence to critical milestones.</li>
+                                <li>Designed and implemented a new, end-to-end program and project governance framework within the PMO, resulting in achieving maximum client satisfaction (CSAT: from 4/7 to 7/7).</li>
+                                <li>Spearheaded the successful delivery of the largest and most complex client project, overseeing the migration of 2 datacenters and numerous applications/platform transformations to the Cloud.</li>
+                                <li>Developed and proposed a new resource allocation tracking tool and working unit scheme, improving resource utilization by 10% and generating budget savings of 15% across the project portfolio.</li>
+                                <li>Prioritized tasks for development teams in Agile sprints, ensuring delivery of high-value features aligned with business needs.</li>
+                                <li>Managed incidents, problems, and change processes, minimizing downtime for critical applications.</li>
+                                <li>Led release planning, backlog management, and Scrum of Scrums to deliver epics and features.</li>
+                                <li>Engaged with senior stakeholders, providing regular updates on release commitments and risks.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item -->
+                 <div class="mb-10 ml-6 timeline-item">
+                    <span class="absolute flex items-center justify-center w-3 h-3 bg-sky-500 rounded-full -left-1.5 ring-8 ring-white"></span>
+                    <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm cursor-pointer" onclick="toggleDetails(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-slate-900">Sr. Project & Service Delivery Manager</h3>
+                            <span class="text-sm font-medium text-slate-500">05/2019 - 06/2022</span>
+                        </div>
+                        <p class="text-md font-normal text-slate-600">LinkByNet Vietnam</p>
+                        <div class="timeline-item-content">
+                             <ul class="mt-4 list-disc list-inside text-slate-700 space-y-2">
+                                <li>Directed large-scale IT projects, focusing on infrastructure and service delivery, ensuring alignment with strategic objectives, scope, timeline, and budget.</li>
+                                <li>Led a 20-member IT managed services team, consistently delivering high-quality services and exceeding client expectations.</li>
+                                <li>Drove continuous improvement of core IT processes (Incident, Change, Problem Management), significantly boosting efficiency and reducing service disruptions.</li>
+                                <li>Chaired steering committees to resolve project roadblocks and secure critical approvals.</li>
+                                <li>Managed cloud transformation of 1000+ servers to AWS, enhancing operational efficiency, scalability, and meeting strict SLAs.</li>
+                                <li>Orchestrated the transfer of management for 1000+ IT assets to a new partner, optimizing costs and improving service visibility.</li>
+                                <li>Fostered strong client and stakeholder relationships, providing transparent updates and leading proactive risk mitigation.</li>
+                                <li>Developed testing plans and acceptance criteria, ensuring high-quality software releases.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item -->
+                <div class="mb-10 ml-6 timeline-item">
+                    <span class="absolute flex items-center justify-center w-3 h-3 bg-sky-500 rounded-full -left-1.5 ring-8 ring-white"></span>
+                    <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm cursor-pointer" onclick="toggleDetails(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-slate-900">Network Operation Team Leader</h3>
+                            <span class="text-sm font-medium text-slate-500">12/2014 - 05/2019</span>
+                        </div>
+                        <p class="text-md font-normal text-slate-600">KDDI GNOC Vietnam</p>
+                        <div class="timeline-item-content">
+                             <ul class="mt-4 list-disc list-inside text-slate-700 space-y-2">
+                                <li>Built and led a specialized SWAT team to efficiently handle and resolve escalated network problems, significantly improving rapid response capabilities.</li>
+                                <li>Managed a 12-person team responsible for 24/7 monitoring, operation, and troubleshooting of a global network for Japanese clients, maintaining stringent global network SLAs.</li>
+                                <li>Responsible for enhancing IT service quality and overall team performance, coordinating with worldwide IT carriers to design and optimize operation services.</li>
+                                <li>Improved service reporting rate from 80% to 99% and RCA rate from 80% to 95%, exceeding operational standards.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                 <!-- Timeline Item -->
+                <div class="mb-10 ml-6 timeline-item">
+                    <span class="absolute flex items-center justify-center w-3 h-3 bg-sky-500 rounded-full -left-1.5 ring-8 ring-white"></span>
+                     <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm cursor-pointer" onclick="toggleDetails(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-slate-900">IT Engineer</h3>
+                            <span class="text-sm font-medium text-slate-500">05/2012 - 12/2014</span>
+                        </div>
+                        <p class="text-md font-normal text-slate-600">Le Bao Minh JSC.</p>
+                        <div class="timeline-item-content">
+                             <ul class="mt-4 list-disc list-inside text-slate-700 space-y-2">
+                                <li>Administered comprehensive IT infrastructure, including Firewalls, Servers (Email, Accounting, File), and redundant Internet links.</li>
+                                <li>Implemented and managed a SAN storage solution for a large-scale text digitalization project.</li>
+                                <li>Deployed and maintained a robust backup & restore solution for the Education department using IBM and Symantec technologies.</li>
+                                <li>Led technical support team to resolve client-reported issues and managed VIP client maintenance.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Timeline Item -->
+                <div class="ml-6 timeline-item">
+                    <span class="absolute flex items-center justify-center w-3 h-3 bg-sky-500 rounded-full -left-1.5 ring-8 ring-white"></span>
+                     <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm cursor-pointer" onclick="toggleDetails(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-xl font-semibold text-slate-900">Developer</h3>
+                            <span class="text-sm font-medium text-slate-500">08/2010 - 05/2012</span>
+                        </div>
+                        <p class="text-md font-normal text-slate-600">Freelance</p>
+                         <div class="timeline-item-content">
+                             <ul class="mt-4 list-disc list-inside text-slate-700 space-y-2">
+                                <li>Developed WinForms/Web Gym & Yoga Management applications using C#, JS, PHP, MSSQL, HTML, CSS.</li>
+                                <li>Provided custom software development and web solutions to individual clients and small businesses.</li>
+                                <li>Utilized diverse programming languages and API integrations to deliver robust and functional software solutions.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Skills Section -->
         <section id="skills" class="mb-16 scroll-mt-24">
             <h2 class="text-3xl font-bold text-slate-800 border-b-2 border-sky-500 pb-2 mb-6">Core Competencies</h2>
              <p class="text-slate-600 mb-8">This section provides a visual and categorized overview of my key skills, from high-level management expertise to specific technical platforms, demonstrating the breadth of my capabilities.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
                 <div>
                     <h3 class="text-2xl font-semibold text-slate-700 mb-4 text-center">Management Expertise</h3>
-                    <div class="chart-container relative h-96 w-full max-w-lg mx-auto">
-                        <canvas id="skillsChart"></canvas>
-                    </div>
-                     <div class="mt-8 space-y-3">
-                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
-                            <span class="font-bold text-slate-800">Agile Delivery</span>
-                            <button class="project-btn text-sky-600 hover:text-sky-800 font-semibold text-sm" 
-                                data-title="Agile Delivery" 
-                                data-details="<ul><li>Led release planning, backlog management, and Scrum of Scrums to deliver epics and features.</li><li>Managed software release cycles, go-live planning, and rollback strategies.</li></ul>">Learn More →</button>
+                    <div class="space-y-3">
+                        <!-- Management Skill Item: Strategic Leadership -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">Strategic Leadership</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>Program & Project Management</li>
+                                    <li>Agile Delivery</li>
+                                    <li>Cross-Functional Team Leadership</li>
+                                    <li>Business Acumen</li>
+                                    <li>Risk Identification & Mitigation</li>
+                                    <li>Strategic Planning</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
-                            <span class="font-bold text-slate-800">Budget Management</span>
-                            <button class="project-btn text-sky-600 hover:text-sky-800 font-semibold text-sm" 
-                                data-title="Budget Management" 
-                                data-details="<ul><li>Developed and managed program budgets, ensuring efficient financial management.</li><li>Optimized resource allocation for Agile squads to meet delivery timelines.</li><li>Achieved budget savings of 15% across project portfolio.</li></ul>">Learn More →</button>
+                        <!-- Management Skill Item: Digital Transformation & Enterprise Enablement -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">Digital Transformation & Enterprise Enablement</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>Championing digital transformation</li>
+                                    <li>Leading enterprise system rollouts</li>
+                                    <li>Driving automation projects</li>
+                                    <li>Optimizing productivity platforms</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
-                            <span class="font-bold text-slate-800">Risk Mitigation</span>
-                            <button class="project-btn text-sky-600 hover:text-sky-800 font-semibold text-sm" 
-                                data-title="Risk Mitigation" 
-                                data-details="<ul><li>Proactively resolved blockers and mitigated risks in complex projects.</li><li>Expert in risk management and risk identification & mitigation.</li></ul>">Learn More →</button>
+                        <!-- Management Skill Item: Cross-Functional Collaboration & Team Leadership -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">Cross-Functional Collaboration & Team Leadership</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>Fostering effective partnerships with diverse teams, including software development, engineering, and operations, to ensure cohesive project execution.</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
-                            <span class="font-bold text-slate-800">Stakeholder Engagement</span>
-                            <button class="project-btn text-sky-600 hover:text-sky-800 font-semibold text-sm" 
-                                data-title="Stakeholder Engagement" 
-                                data-details="<ul><li>Built trusted relationships with senior stakeholders and vendors.</li><li>Fostered effective partnerships with diverse teams, ensuring cohesive project execution.</li><li>Provided regular updates on release commitments and risks.</li></ul>">Learn More →</button>
+                        <!-- Management Skill Item: Technical Communication & Bridging -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">Technical Communication & Bridging</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>Ability to translate complex technical concepts into business terms and effectively communicate with development teams, technical experts, and non-technical stakeholders.</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
-                            <span class="font-bold text-slate-800">Team Leadership</span>
-                            <button class="project-btn text-sky-600 hover:text-sky-800 font-semibold text-sm" 
-                                data-title="Team Leadership" 
-                                data-details="<ul><li>Led dedicated cross-functional teams of 30+ professionals, managing and tracking all projects within the account.</li><li>Mentored teams and ensured high-performance delivery.</li></ul>">Learn More →</button>
+                        <!-- Management Skill Item: IT Service Management -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">IT Service Management</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>ITIL v4 Framework</li>
+                                    <li>Process Optimization (Incident, Change, Problem Management)</li>
+                                    <li>Service Delivery Excellence</li>
+                                    <li>SLA Management</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
-                            <span class="font-bold text-slate-800">Strategic Planning</span>
-                            <button class="project-btn text-sky-600 hover:text-sky-800 font-semibold text-sm" 
-                                data-title="Strategic Planning" 
-                                data-details="<ul><li>Shaped strategic IT roadmaps and orchestrated large-scale digital transformation initiatives.</li><li>Applied leadership and analytical skills to optimize processes and make significant impact.</li></ul>">Learn More →</button>
+                        <!-- Management Skill Item: Problem-Solving & Decision Making -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">Problem-Solving & Decision Making</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>Technical Problem-Solving</li>
+                                    <li>Strategic Planning</li>
+                                    <li>Risk Management</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Management Skill Item: Financial & Operational Management -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">Financial & Operational Management</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>Budget Optimization & Cost Management</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Management Skill Item: Collaboration & Communication -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">Collaboration & Communication</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>Stakeholder Communication & Collaboration</li>
+                                    <li>Cross-Functional Collaboration</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Management Skill Item: Stakeholder Engagement -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">Stakeholder Engagement</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>Building trusted relationships with clients, vendors, and internal teams; C-level engagement.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Management Skill Item: Emerging Technologies Awareness -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">Emerging Technologies Awareness</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>Financial Technology (Fintech)</li>
+                                    <li>Machine Learning (ML) & Artificial Intelligence (AI)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Management Skill Item: Languages -->
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm cursor-pointer management-skill-item" onclick="toggleDetails(this)">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800">Languages</span>
+                            </div>
+                            <div class="timeline-item-content">
+                                <ul class="mt-2 list-disc list-inside text-slate-700 space-y-1">
+                                    <li>English (Fluent)</li>
+                                    <li>Vietnamese (Native)</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -234,122 +459,6 @@
             </div>
         </section>
 
-        <!-- Work Experience Section -->
-        <section id="experience" class="mb-16 scroll-mt-24">
-            <h2 class="text-3xl font-bold text-slate-800 border-b-2 border-sky-500 pb-2 mb-8">Work Experience</h2>
-            <p class="text-slate-600 mb-8">My career progression is outlined below in an interactive timeline. Click on any role to expand and view detailed responsibilities and key achievements.</p>
-            <div class="relative border-l-2 border-slate-200">
-                
-                <!-- Timeline Item -->
-                <div class="mb-10 ml-6 timeline-item">
-                    <span class="absolute flex items-center justify-center w-3 h-3 bg-sky-500 rounded-full -left-1.5 ring-8 ring-white"></span>
-                    <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm cursor-pointer" onclick="toggleDetails(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xl font-semibold text-slate-900">Program Manager</h3>
-                            <span class="text-sm font-medium text-slate-500">06/2022 – Present</span>
-                        </div>
-                        <p class="text-md font-normal text-slate-600">Accenture Vietnam (Acquired Linkbynet)</p>
-                        <div class="timeline-item-content">
-                            <ul class="mt-4 list-disc list-inside text-slate-700 space-y-2">
-                                <li>Orchestrated large-scale digital transformation initiatives for clients across Retailing, Luxury Fashion, and Technology sectors.</li>
-                                <li>Led a dedicated team of 30+ cross-functional professionals, managing and tracking all projects within the account, ensuring 100% adherence to critical milestones.</li>
-                                <li>Designed and implemented a new, end-to-end program and project governance framework within the PMO, resulting in achieving maximum client satisfaction (CSAT: from 4/7 to 7/7).</li>
-                                <li>Spearheaded the successful delivery of the largest and most complex client project, overseeing the migration of 2 datacenters and numerous applications/platform transformations to the Cloud.</li>
-                                <li>Developed and proposed a new resource allocation tracking tool and working unit scheme, improving resource utilization by 10% and generating budget savings of 15% across the project portfolio.</li>
-                                <li>Prioritized tasks for development teams in Agile sprints, ensuring delivery of high-value features aligned with business needs.</li>
-                                <li>Managed incidents, problems, and change processes, minimizing downtime for critical applications.</li>
-                                <li>Led release planning, backlog management, and Scrum of Scrums to deliver epics and features.</li>
-                                <li>Engaged with senior stakeholders, providing regular updates on release commitments and risks.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Timeline Item -->
-                 <div class="mb-10 ml-6 timeline-item">
-                    <span class="absolute flex items-center justify-center w-3 h-3 bg-sky-500 rounded-full -left-1.5 ring-8 ring-white"></span>
-                    <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm cursor-pointer" onclick="toggleDetails(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xl font-semibold text-slate-900">Sr. Project & Service Delivery Manager</h3>
-                            <span class="text-sm font-medium text-slate-500">05/2019 - 06/2022</span>
-                        </div>
-                        <p class="text-md font-normal text-slate-600">LinkByNet Vietnam</p>
-                        <div class="timeline-item-content">
-                             <ul class="mt-4 list-disc list-inside text-slate-700 space-y-2">
-                                <li>Directed large-scale IT projects, focusing on infrastructure and service delivery, ensuring alignment with strategic objectives, scope, timeline, and budget.</li>
-                                <li>Led a 20-member IT managed services team, consistently delivering high-quality services and exceeding client expectations.</li>
-                                <li>Drove continuous improvement of core IT processes (Incident, Change, Problem Management), significantly boosting efficiency and reducing service disruptions.</li>
-                                <li>Chaired steering committees to resolve project roadblocks and secure critical approvals.</li>
-                                <li>Managed cloud transformation of 100+ servers to AWS, enhancing operational efficiency, scalability, and meeting strict SLAs.</li>
-                                <li>Orchestrated the transfer of management for 1000+ IT assets to a new partner, optimizing costs and improving service visibility.</li>
-                                <li>Fostered strong client and stakeholder relationships, providing transparent updates and leading proactive risk mitigation.</li>
-                                <li>Developed testing plans and acceptance criteria, ensuring high-quality software releases.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Timeline Item -->
-                <div class="mb-10 ml-6 timeline-item">
-                    <span class="absolute flex items-center justify-center w-3 h-3 bg-sky-500 rounded-full -left-1.5 ring-8 ring-white"></span>
-                    <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm cursor-pointer" onclick="toggleDetails(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xl font-semibold text-slate-900">Network Operation Team Leader</h3>
-                            <span class="text-sm font-medium text-slate-500">12/2014 - 05/2019</span>
-                        </div>
-                        <p class="text-md font-normal text-slate-600">KDDI GNOC Vietnam</p>
-                        <div class="timeline-item-content">
-                             <ul class="mt-4 list-disc list-inside text-slate-700 space-y-2">
-                                <li>Built and led a specialized SWAT team to efficiently handle and resolve escalated network problems, significantly improving rapid response capabilities.</li>
-                                <li>Managed a 12-person team responsible for 24/7 monitoring, operation, and troubleshooting of a global network for Japanese clients, maintaining stringent global network SLAs.</li>
-                                <li>Enhanced IT service quality and team performance by coordinating with worldwide IT carriers to design and optimize operation services.</li>
-                                <li>Improved service reporting rate from 80% to 99% and RCA rate from 80% to 95%, exceeding operational standards.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                 <!-- Timeline Item -->
-                <div class="mb-10 ml-6 timeline-item">
-                    <span class="absolute flex items-center justify-center w-3 h-3 bg-sky-500 rounded-full -left-1.5 ring-8 ring-white"></span>
-                     <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm cursor-pointer" onclick="toggleDetails(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xl font-semibold text-slate-900">IT Engineer</h3>
-                            <span class="text-sm font-medium text-slate-500">05/2012 - 12/2014</span>
-                        </div>
-                        <p class="text-md font-normal text-slate-600">Le Bao Minh JSC.</p>
-                        <div class="timeline-item-content">
-                             <ul class="mt-4 list-disc list-inside text-slate-700 space-y-2">
-                                <li>Administered comprehensive IT infrastructure, including Firewalls, Servers (Email, Accounting, File), and redundant Internet links.</li>
-                                <li>Implemented and managed a SAN storage solution for a large-scale text digitalization project.</li>
-                                <li>Deployed and maintained a robust backup & restore solution for the Education department using IBM and Symantec technologies.</li>
-                                <li>Led a technical support team to resolve client-reported issues and managed VIP client maintenance.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                 <!-- Timeline Item -->
-                <div class="ml-6 timeline-item">
-                    <span class="absolute flex items-center justify-center w-3 h-3 bg-sky-500 rounded-full -left-1.5 ring-8 ring-white"></span>
-                     <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm cursor-pointer" onclick="toggleDetails(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xl font-semibold text-slate-900">Developer</h3>
-                            <span class="text-sm font-medium text-slate-500">08/2010 - 05/2012</span>
-                        </div>
-                        <p class="text-md font-normal text-slate-600">Freelance</p>
-                         <div class="timeline-item-content">
-                             <ul class="mt-4 list-disc list-inside text-slate-700 space-y-2">
-                                <li>Developed WinForms/Web Gym & Yoga Management applications using C#, JS, PHP, MSSQL, HTML, CSS.</li>
-                                <li>Provided custom software development and web solutions to individual clients and small businesses.</li>
-                                <li>Utilized diverse programming languages and API integrations to deliver robust and functional software solutions.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Certifications & Education Section -->
         <section id="certifications" class="mb-16 scroll-mt-24">
             <h2 class="text-3xl font-bold text-slate-800 border-b-2 border-sky-500 pb-2 mb-8">Certifications & Education</h2>
@@ -359,12 +468,9 @@
                     <h3 class="text-2xl font-semibold text-slate-700 mb-4">Certifications</h3>
                     <ul class="space-y-3">
                         <li class="bg-white p-3 rounded-lg border border-slate-200"><strong>PMP</strong> - Project Management Institute</li>
-                        <li class="bg-white p-3 rounded-lg border border-slate-200"><strong>Financial Technology (Fintech) Innovations</strong> - University of Michigan/Coursera</li>
                         <li class="bg-white p-3 rounded-lg border border-slate-200"><strong>ITIL v4</strong> - Axelos/PeopleCert</li>
                         <li class="bg-white p-3 rounded-lg border border-slate-200"><strong>Azure Fundamentals (AZ-900)</strong> - Microsoft</li>
                         <li class="bg-white p-3 rounded-lg border border-slate-200"><strong>AWS Cloud Practitioner</strong> - AWS</li>
-                        <li class="bg-white p-3 rounded-lg border border-slate-200"><strong>Machine Learning (ML)</strong> - Stanford Online</li>
-                        <li class="bg-white p-3 rounded-lg border border-slate-200"><strong>IT Manager</strong> - Infochief</li>
                         <li class="bg-white p-3 rounded-lg border border-slate-200"><strong>CCNP & CCNA</strong> - Cisco</li>
                         <li class="bg-white p-3 rounded-lg border border-slate-200"><strong>MCSE, MCSA, MCITP-EA</strong> - Microsoft</li>
                     </ul>
@@ -395,52 +501,32 @@
                 <div class="card bg-white p-6 rounded-lg border border-slate-200">
                     <h3 class="font-bold text-lg text-slate-800">Data Center Migration</h3>
                     <p class="text-slate-600 mt-2 text-sm">Led end-to-end relocation and migration of applications to AWS, coordinating with APAC teams.</p>
-                    <button class="project-btn mt-4 text-sky-600 hover:text-sky-800 font-semibold text-sm" data-title="Data Center Migration" data-details="<ul><li>Led the end-to-end relocation of equipment to a new data center and migrated critical applications to AWS.</li><li>Coordinated with APAC teams in Singapore, Japan, and Thailand to ensure a seamless transition.</li><li>The project resulted in significant cost savings and an enhanced security posture for the client's infrastructure.</li><li>My responsibilities also included managing dependencies across 15-20 cross-functional team members to achieve enhanced scalability.</li></ul>">Learn More →</button>
+                    <button class="project-btn mt-4 text-sky-600 hover:text-sky-800 font-semibold text-sm" data-title="Data Center Migration" data-details="Led end-to-end relocation of equipment to a new data center and migrated critical applications to AWS. Coordinated with APAC teams in Singapore, Japan, and Thailand to ensure a seamless transition. The project resulted in significant cost savings and an enhanced security posture for the client's infrastructure. Also managed dependencies across 15-20 cross-functional team members, achieving enhanced scalability.">Learn More →</button>
                 </div>
                 <!-- Project Card -->
                 <div class="card bg-white p-6 rounded-lg border border-slate-200">
                     <h3 class="font-bold text-lg text-slate-800">Cloud Transformation</h3>
                     <p class="text-slate-600 mt-2 text-sm">Managed the migration of 100+ servers to AWS, improving scalability and operational efficiency.</p>
-                    <button class="project-btn mt-4 text-sky-600 hover:text-sky-800 font-semibold text-sm" data-title="Cloud Transformation" data-details="<ul><li>Directed the project to migrate over 100 servers to AWS, which improved operational efficiency and provided greater scalability to meet business demands.</li><li>My role involved managing vendor relationships, overseeing technical configurations for Wintel and Azure systems.</li><li>Handled complex dependencies across multiple agile squads to ensure project success.</li></ul>">Learn More →</button>
+                    <button class="project-btn mt-4 text-sky-600 hover:text-sky-800 font-semibold text-sm" data-title="Cloud Transformation" data-details="Directed the project to migrate over 100 servers to AWS, which improved operational efficiency and provided greater scalability to meet business demands. My role involved managing vendor relationships, overseeing technical configurations for Wintel and Azure systems, and handling complex dependencies across multiple agile squads to ensure project success.">Learn More →</button>
                 </div>
                 <!-- Project Card -->
                 <div class="card bg-white p-6 rounded-lg border border-slate-200">
                     <h3 class="font-bold text-lg text-slate-800">Software Development & Integration</h3>
                     <p class="text-slate-600 mt-2 text-sm">Led development of a custom monitoring system and integrated ITSM tools via API.</p>
-                     <button class="project-btn mt-4 text-sky-600 hover:text-sky-800 font-semibold text-sm" data-title="Software Development & Integration" data-details="<ul><li>Led a project for the development of a customized monitoring system tailored to specific client needs.</li><li>Spearheaded the build and integration of ITSM solutions between external vendor tools and in-house systems using APIs.</li><li>This required close coordination with internal and external teams, including developers, QA testers, and technical support.</li></ul>">Learn More →</button>
+                     <button class="project-btn mt-4 text-sky-600 hover:text-sky-800 font-semibold text-sm" data-title="Software Development & Integration" data-details="Led a project for the development of a customized monitoring system tailored to specific client needs. Additionally, I spearheaded the build and integration of ITSM solutions between external vendor tools and in-house systems using APIs. This required close coordination with internal and external teams, including developers, QA testers, and technical support.">Learn More →</button>
                 </div>
                  <!-- Project Card -->
                 <div class="card bg-white p-6 rounded-lg border border-slate-200">
                     <h3 class="font-bold text-lg text-slate-800">IT Service Transition</h3>
                     <p class="text-slate-600 mt-2 text-sm">Managed the transfer of 1000+ IT assets to a new service partner, optimizing costs.</p>
-                     <button class="project-btn mt-4 text-sky-600 hover:text-sky-800 font-semibold text-sm" data-title="IT Service Transition" data-details="<ul><li>Oversaw the complex process of transferring IT management services from an existing partner to a new one.</li><li>The scope included over 1000 IT assets across a wide range of technologies: Networking, Security, Windows, Unix, Databases, and Cloud.</li><li>The successful transition optimized costs and aligned service delivery with new business objectives.</li></ul>">Learn More →</button>
+                     <button class="project-btn mt-4 text-sky-600 hover:text-sky-800 font-semibold text-sm" data-title="IT Service Transition" data-details="Oversaw the complex process of transferring IT management services from an existing partner to a new one. The scope included over 1000 IT assets across a wide range of technologies: Networking, Security, Windows, Unix, Databases, and Cloud. The successful transition optimized costs and aligned service delivery with new business objectives.">Learn More →</button>
                 </div>
                  <!-- Project Card -->
                 <div class="card bg-white p-6 rounded-lg border border-slate-200">
                     <h3 class="font-bold text-lg text-slate-800">Infrastructure & Security Upgrades</h3>
                     <p class="text-slate-600 mt-2 text-sm">Led projects to upgrade OS, security agents (Splunk), and core network devices.</p>
-                     <button class="project-btn mt-4 text-sky-600 hover:text-sky-800 font-semibold text-sm" data-title="Infrastructure & Security Upgrades" data-details="<ul><li>Led multiple critical upgrade projects to modernize the IT environment.</li><li>Included upgrading Windows/Linux server operating systems (e.g., from 2008 to 2012/2019).</li><li>Updating security endpoint agents like Splunk and Skybox, and refreshing core networking devices such as routers, switches, Wi-Fi controllers, and firewalls to enhance performance and security.</li></ul>">Learn More →</button>
+                     <button class="project-btn mt-4 text-sky-600 hover:text-sky-800 font-semibold text-sm" data-title="Infrastructure & Security Upgrades" data-details="I led multiple critical upgrade projects to modernize the IT environment. This included upgrading Windows/Linux server operating systems (e.g., from 2008 to 2012/2019), updating security endpoint agents like Splunk and Skybox, and refreshing core networking devices such as routers, switches, Wi-Fi controllers, and firewalls to enhance performance and security.">Learn More →</button>
                 </div>
-            </div>
-        </section>
-
-        <!-- AI Career Path Explorer Section -->
-        <section id="career-explorer" class="mb-16 scroll-mt-24 bg-white p-8 rounded-lg shadow-sm border border-slate-200">
-            <h2 class="text-3xl font-bold text-slate-800 border-b-2 border-sky-500 pb-2 mb-6">✨ AI Career Path Explorer</h2>
-            <p class="text-slate-600 mb-6">Tận dụng sức mạnh của AI để khám phá các lộ trình sự nghiệp tiềm năng dựa trên hồ sơ chuyên môn của bạn. Nhập lĩnh vực hoặc vị trí mục tiêu bạn quan tâm, hoặc để trống để nhận gợi ý tổng quát.</p>
-            
-            <div class="mb-4">
-                <label for="career-input" class="block text-slate-700 text-sm font-semibold mb-2">Lĩnh vực/Vị trí mục tiêu (tùy chọn):</label>
-                <textarea id="career-input" class="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800" rows="3" placeholder="Ví dụ: quản lý sản phẩm trong ngành fintech, lãnh đạo công nghệ đám mây..."></textarea>
-            </div>
-            
-            <button id="explore-career-btn" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 flex items-center justify-center">
-                <span id="button-text">Khám phá Lộ trình Sự nghiệp ✨</span>
-                <div id="loading-spinner" class="loading-spinner ml-3 hidden"></div>
-            </button>
-
-            <div id="career-results" class="mt-8 space-y-4">
-                <!-- Career suggestions will be displayed here -->
             </div>
         </section>
 
@@ -462,6 +548,12 @@
     </footer>
 
     <script>
+        // Timeline toggle function defined globally
+        function toggleDetails(element) {
+            const content = element.querySelector('.timeline-item-content');
+            content.classList.toggle('open');
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             // Mobile menu toggle
             const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -470,52 +562,7 @@
                 mobileMenu.classList.toggle('hidden');
             });
 
-            // Skills Chart
-            const ctx = document.getElementById('skillsChart').getContext('2d');
-            const skillsChart = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['Agile Delivery', 'Budget Management', 'Risk Mitigation', 'Stakeholder Engagement', 'Team Leadership', 'Strategic Planning'],
-                    datasets: [{
-                        label: 'Management Proficiency',
-                        data: [9, 9, 9, 9, 9, 9], /* All skills updated to 9 */
-                        backgroundColor: 'rgba(14, 165, 233, 0.2)',
-                        borderColor: 'rgba(14, 165, 233, 1)',
-                        borderWidth: 2,
-                        pointBackgroundColor: 'rgba(14, 165, 233, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(14, 165, 233, 1)'
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
-                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
-                            pointLabels: { 
-                                font: { size: 14, weight: 'bold' },
-                                color: '#334155' // slate-700
-                            },
-                            ticks: {
-                                backdropColor: 'rgba(255, 255, 255, 0.75)',
-                                color: '#64748b', //slate-500
-                                stepSize: 2,
-                                beginAtZero: true,
-                                max: 10
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-
-            // Project Modal Logic
+            // Project Modal Logic (unchanged)
             const modal = document.getElementById('project-modal');
             const modalTitle = document.getElementById('modal-title');
             const modalDetails = document.getElementById('modal-details');
@@ -524,7 +571,8 @@
             document.querySelectorAll('.project-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     modalTitle.textContent = button.dataset.title;
-                    modalDetails.innerHTML = button.dataset.details; /* Changed to innerHTML for bullet points */
+                    // For Project Modal, the details are already HTML (with <ul><li>), so use innerHTML
+                    modalDetails.innerHTML = button.dataset.details; 
                     modal.classList.remove('hidden');
                     setTimeout(()=> modal.classList.remove('opacity-0'), 10);
                 });
@@ -542,7 +590,7 @@
                 }
             });
 
-            // Active nav link highlighting on scroll
+            // Active nav link highlighting on scroll (unchanged)
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
 
@@ -563,122 +611,12 @@
                 observer.observe(section);
             });
             
-            // Close mobile menu on link click
+            // Close mobile menu on link click (unchanged)
             document.querySelectorAll('#mobile-menu a').forEach(link => {
                 link.addEventListener('click', () => {
                     mobileMenu.classList.add('hidden');
                 });
             });
-        });
-        
-        // Timeline toggle function
-        function toggleDetails(element) {
-            const content = element.querySelector('.timeline-item-content');
-            content.classList.toggle('open');
-        }
-
-        // Gemini API Integration for Career Path Explorer
-        document.getElementById('explore-career-btn').addEventListener('click', async () => {
-            const exploreButton = document.getElementById('explore-career-btn');
-            const buttonText = document.getElementById('button-text');
-            const loadingSpinner = document.getElementById('loading-spinner');
-            const careerInput = document.getElementById('career-input').value;
-            const careerResults = document.getElementById('career-results');
-
-            // Show loading state
-            buttonText.classList.add('hidden');
-            loadingSpinner.classList.remove('hidden');
-            exploreButton.disabled = true;
-            careerResults.innerHTML = ''; // Clear previous results
-
-            // Extract CV content for the prompt
-            const professionalSummary = document.querySelector('#summary p').textContent;
-            
-            const experienceItems = Array.from(document.querySelectorAll('#experience .timeline-item'));
-            const experienceText = experienceItems.map(item => {
-                const title = item.querySelector('h3').textContent;
-                const company = item.querySelector('p:not(.text-sm)').textContent;
-                const date = item.querySelector('.text-sm').textContent;
-                const details = Array.from(item.querySelectorAll('li')).map(li => li.textContent).join('\n');
-                return `${title} at ${company} (${date}):\n${details}`;
-            }).join('\n\n');
-
-            const skillsText = Array.from(document.querySelectorAll('#skills .flex-wrap span')).map(span => span.textContent).join(', ');
-            const certificationsText = Array.from(document.querySelectorAll('#certifications ul li')).map(li => li.textContent).join(', ');
-
-            const cvContent = `Professional Summary: ${professionalSummary}\n\nWork Experience:\n${experienceText}\n\nSkills: ${skillsText}\n\nCertifications: ${certificationsText}`;
-
-            let prompt = `Based on the following CV content, please suggest 3-5 potential career paths or job roles. For each suggestion, provide a brief (1-2 sentences) justification linking it to the skills, experience, or certifications in the CV. Prioritize roles related to IT project management, program management, service delivery, and digital transformation.`;
-            
-            if (careerInput.trim() !== '') {
-                prompt += ` The user is particularly interested in: "${careerInput.trim()}". Please tailor the suggestions to align with this interest while still leveraging the CV content.`;
-            }
-
-            const chatHistory = [];
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-            const payload = {
-                contents: chatHistory,
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "ARRAY",
-                        items: {
-                            type: "OBJECT",
-                            properties: {
-                                "role": { "type": "STRING" },
-                                "justification": { "type": "STRING" }
-                            },
-                            "propertyOrdering": ["role", "justification"]
-                        }
-                    }
-                }
-            };
-
-            const apiKey = ""; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const jsonString = result.candidates[0].content.parts[0].text;
-                    const parsedJson = JSON.parse(jsonString);
-
-                    if (parsedJson.length > 0) {
-                        careerResults.innerHTML = '<h3 class="text-2xl font-semibold text-slate-700 mb-4">Gợi ý Lộ trình Sự nghiệp:</h3>';
-                        parsedJson.forEach(suggestion => {
-                            const suggestionCard = document.createElement('div');
-                            suggestionCard.className = 'bg-blue-50 p-4 rounded-lg border border-blue-200';
-                            suggestionCard.innerHTML = `
-                                <h4 class="font-bold text-lg text-blue-800">${suggestion.role}</h4>
-                                <p class="text-blue-700 mt-2">${suggestion.justification}</p>
-                            `;
-                            careerResults.appendChild(suggestionCard);
-                        });
-                    } else {
-                        careerResults.innerHTML = '<p class="text-slate-600">Không thể tìm thấy gợi ý lộ trình sự nghiệp nào. Vui lòng thử lại.</p>';
-                    }
-                } else {
-                    careerResults.innerHTML = '<p class="text-red-600">Đã xảy ra lỗi khi tạo gợi ý. Vui lòng thử lại sau.</p>';
-                }
-
-            } catch (error) {
-                console.error('Error calling Gemini API:', error);
-                careerResults.innerHTML = '<p class="text-red-600">Đã xảy ra lỗi mạng hoặc lỗi API. Vui lòng kiểm tra kết nối và thử lại.</p>';
-            } finally {
-                // Hide loading state
-                buttonText.classList.remove('hidden');
-                loadingSpinner.classList.add('hidden');
-                exploreButton.disabled = false;
-            }
         });
     </script>
 </body>
